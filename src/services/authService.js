@@ -3,10 +3,10 @@ import validateEmail from "../utils/validateEmail.js"
 import bcrypt from "bcryptjs";
 
 const registerService = async (name, email, password) => {
+    email = email.trim().toLowerCase()
 
     const verifiedEmail = await validateEmail(email);
-
-    if (!verifiedEmail) { 
+    if (!verifiedEmail) {
         throw new Error("Invalid e-mail");
     };
 

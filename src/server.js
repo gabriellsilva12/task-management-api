@@ -54,7 +54,7 @@ const startServer = async () => {
   // Delete multiple users
   // await User.destroy({
   //       where: {
-  //             id: [12, 15, 20]
+  //             id: [8]
   //         }
   //     });
 //==========================================================================

@@ -22,7 +22,7 @@ const validateEmail = async ( email ) => {
     } catch (err) {
         // console.log("MX lookup failed:", err.message)
         return false
-    }D
+    }
 }   
 
 export default validateEmail
