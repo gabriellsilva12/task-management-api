@@ -15,9 +15,8 @@ const getTasks = async (req, res) => {
 const createTask = async (req, res) => {
 
     try {
-        const { userId } = req.userId;
+        const userId  = req.userId;
         const { title, description } = req.body;
-
         const task = await createUserTask(title, description, userId)
 
         res.status(201).json({ message: "Task successfully created", task });
@@ -30,11 +29,11 @@ const createTask = async (req, res) => {
 const updateTask = async (req, res) => {
 
     try {
-        const { id } = req.params;
         const userIdToken = req.userId
+        const { id: idParams } = req.params;
         const { title, description, completed } = req.body;
         
-        const task = await updateUserTask(id, userIdToken, title, description, completed)
+        const task = await updateUserTask(idParams, userIdToken, title, description, completed)
 
         res.json({ message: "Task successfully updated", task })
     } catch (error) {

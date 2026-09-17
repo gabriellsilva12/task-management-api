@@ -5,7 +5,7 @@ import express from "express";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { config } from "dotenv";
-import { sequelize, testConnection, syncDatabase } from "./config/database.js"
+import { testConnection, syncDatabase } from "./config/database.js"
 import authRoutes from "./routes/authRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import "./models/index.js"
@@ -45,10 +45,20 @@ const startServer = async () => {
 
     await syncDatabase(false)
 
-    // const user = await User.findOne({ where: { id: 12 } })
+//==========================================================================
+  // DEVELOPMENT / DATABASE TESTS 
 
-    // await user.destroy()
+  // Reset database (WARNING: deletes all data)
+  // await syncDatabase(true);
 
+  // Delete multiple users
+  // await User.destroy({
+  //       where: {
+  //             id: [12, 15, 20]
+  //         }
+  //     });
+//==========================================================================
+    
     app.listen(PORT, () => {
       console.log(`Server running => PORT: ${PORT}`)
     })

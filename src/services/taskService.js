@@ -1,3 +1,4 @@
+import { where } from "sequelize";
 import Task from "../models/Task.js";
 
 const getUserTasks = async (userIdTasks) => {
@@ -10,6 +11,9 @@ const getUserTasks = async (userIdTasks) => {
 }
 
 const createUserTask = async (title, description, userId) => {
+
+    if (!userId) return console.error("Error create task");
+
     const task = await Task.create({
         title,
         description,
@@ -19,18 +23,17 @@ const createUserTask = async (title, description, userId) => {
     return task
 }
 
-const updateUserTask = async (id, userIdToken, title, description, completed) => {
-
-    if (id ==! userIdToken) {
-        return console.error("Task not found kkk");
-    }
+const updateUserTask = async (idParams, userIdToken, title, description, completed) => {
 
     const task = await Task.findOne({
-        where: { id }
-    })
+        where: {
+            id: idParams,
+            userId: userIdToken
+        }
+    });
 
     if (!task) {
-        return console.error("Task not found");
+        throw new Error("Task not found");
     }
 
     await task.update({
