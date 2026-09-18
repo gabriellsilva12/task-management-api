@@ -52,11 +52,11 @@ const startServer = async () => {
   // await syncDatabase(true);
 
   // Delete multiple users
-  await User.destroy({
-        where: {
-              id: [26]
-          }
-      });
+  // await User.destroy({
+  //       where: {
+  //             id: [31]
+  //         }
+  //     });
 //==========================================================================
     
     app.listen(PORT, () => {

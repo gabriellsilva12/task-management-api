@@ -2,7 +2,7 @@ import dns from 'node:dns/promises'
 import emailValidator from "node-email-verifier"
 
 const validateEmail = async ( email ) => {
- 
+
     email = email.trim().toLowerCase()
 
     const result = await emailValidator( email, {

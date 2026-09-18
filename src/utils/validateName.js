@@ -1,10 +1,13 @@
 const validateName = (name) => {
-
-    name = name.trim().trim()
-
-    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/.test(name)) return false;
-
-    if (name.length === 0 || name.length > 30) return false;
+    const clearName = name.trim()
+    
+    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/.test(clearName)) name = false;
+    
+    if (clearName.length === 0 || clearName.length > 30) name = false;
+    
+    if (!name) {
+        throw new Error("Invalid name");
+    };
 
     return name;
 };
