@@ -9,12 +9,23 @@ const User = sequelize.define("User", {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+
+        validate: {
+            is: {
+                args: /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/,
+                msg: "Name must contain only letters and spaces"
+            }
+        }
     },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
+
+        validate: {
+            isEmail: true
+        }
     },
     password: {
         type: DataTypes.STRING,

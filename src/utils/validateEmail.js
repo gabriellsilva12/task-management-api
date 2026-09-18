@@ -3,6 +3,8 @@ import emailValidator from "node-email-verifier"
 
 const validateEmail = async ( email ) => {
  
+    email = email.trim().toLowerCase()
+
     const result = await emailValidator( email, {
         checkMx: false,
         checkDisposable: true,
@@ -18,7 +20,7 @@ const validateEmail = async ( email ) => {
 
     try {
         const records = await dns.resolveMx(domain)
-        return records.length > 0
+        if(records.length > 0) return email
     } catch (err) {
         // console.log("MX lookup failed:", err.message)
         return false

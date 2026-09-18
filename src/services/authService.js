@@ -1,15 +1,27 @@
 import User from "../models/User.js"
 import validateEmail from "../utils/validateEmail.js"
 import bcrypt from "bcryptjs";
+import validateName from "../utils/validateName.js";
+import validatePassword from "../utils/validatePassword.js";
 
 const registerService = async (name, email, password) => {
-    email = email.trim().toLowerCase()
 
-    const verifiedEmail = await validateEmail(email);
-    if (!verifiedEmail) {
-        throw new Error("Invalid e-mail");
+    name = validateName(name);
+    password = validatePassword(password);
+    email = await validateEmail(email);
+
+    if (!name) {
+        throw new Error("Invalid name");
     };
 
+    if (!password) {
+        throw new Error("Invalid password");
+    };
+    
+    if (!email) {
+        throw new Error("Invalid e-mail");
+    };
+    
     const existingEmail = await User.findOne({ where: { email } })
     if (existingEmail) {
         throw new Error("Invalid email or password")
