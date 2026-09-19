@@ -1,8 +1,6 @@
-import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import { config } from "dotenv"
-import User from "../models/User.js"
-import registerService from "../services/authService.js"
+import { registerService, loginService } from "../services/authService.js"
 
 config()
 
@@ -19,7 +17,7 @@ const register = async (req, res) => {
             email: user.email
         })
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         res.status(400).json({ error: "Error registering user" })
     }
 
@@ -30,15 +28,7 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const user = await User.findOne({ where: { email } })
-        if (!user) {
-            return res.status(401).json({ error: "Invalid email or password"})
-        }
-
-        const validPassword = await bcrypt.compare(password, user.password)
-        if (!validPassword) {
-            return res.status(401).json({ error: "Invalid email or password" })
-        }
+        const user = await loginService( email, password )
 
         const token = jwt.sign(
             { id: user.id, email: user.email },
@@ -56,6 +46,7 @@ const login = async (req, res) => {
         })
 
     } catch (error) {
+        // console.log(error)
         res.status(400).json({ error: "Login error" })
     }
 

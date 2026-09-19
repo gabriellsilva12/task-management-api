@@ -20,7 +20,7 @@ const validateEmail = async ( email ) => {
 
     try {
         const records = await dns.resolveMx(domain)
-        if(records.length > 0) return email
+        return records.length > 0 ? email : false;
     } catch (err) {
         // console.log("MX lookup failed:", err.message)
         return false
