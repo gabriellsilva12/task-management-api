@@ -3,7 +3,8 @@ import { getUserTasks, createUserTask, updateUserTask, deleteUserTask } from "..
 const getTasks = async (req, res) => {
 
     try {
-        const tasks = await getUserTasks(req.userId)
+        const userId  = req.userId;
+        const tasks = await getUserTasks(userId)
 
         res.json(tasks)
     } catch (error) {
@@ -17,10 +18,12 @@ const createTask = async (req, res) => {
     try {
         const userId  = req.userId;
         const { title, description } = req.body;
+
         const task = await createUserTask(title, description, userId)
 
         res.status(201).json({ message: "Task successfully created", task });
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ error: "Error creating task" })
     }
 
@@ -29,11 +32,12 @@ const createTask = async (req, res) => {
 const updateTask = async (req, res) => {
 
     try {
-        const userIdToken = req.userId
+        const userId = req.userId
+
         const { id: idParams } = req.params;
         const { title, description, completed } = req.body;
         
-        const task = await updateUserTask(idParams, userIdToken, title, description, completed)
+        const task = await updateUserTask(idParams, userId, title, description, completed)
 
         res.json({ message: "Task successfully updated", task })
     } catch (error) {
@@ -45,9 +49,10 @@ const updateTask = async (req, res) => {
 const deleteTask = async (req, res) => {
 
     try {
-        const { id } = req.params
+        const userId = req.userId;
+        const { id: idTask } = req.params
 
-        const task = await deleteUserTask(id)
+        const task = await deleteUserTask(idTask, userId);
 
         res.json({ message: "Task successfully deleted", task })
     } catch (error) {

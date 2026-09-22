@@ -1,9 +1,12 @@
-import { where } from "sequelize";
 import Task from "../models/Task.js";
+import validateText from "../utils/validateText.js";
 
-const getUserTasks = async (userIdTasks) => {
+const getUserTasks = async (userId) => {
+
+    if (!userId) throw new Error("Error create task")
+
     const tasks = await Task.findAll({
-        where: { userId: userIdTasks },
+        where: { userId: userId },
         as: "ASC"
     })
 
@@ -12,7 +15,12 @@ const getUserTasks = async (userIdTasks) => {
 
 const createUserTask = async (title, description, userId) => {
 
-    if (!userId) return console.error("Error create task");
+    if (!userId) throw new Error("Error create task")
+
+    title = validateText(title)
+    description = validateText(description)
+
+    if (!title || !description) throw new Error("Error create task")
 
     const task = await Task.create({
         title,
@@ -23,12 +31,21 @@ const createUserTask = async (title, description, userId) => {
     return task
 }
 
-const updateUserTask = async (idParams, userIdToken, title, description, completed) => {
+const updateUserTask = async (idTask, userId, title, description, completed) => {
 
+    if (!userId) throw new Error("Error create task")
+
+    if (title !== undefined) {
+        title = validateText(title);
+    }
+
+    if (description !== undefined) {
+        description = validateText(description);
+    }
     const task = await Task.findOne({
         where: {
-            id: idParams,
-            userId: userIdToken
+            id: idTask,
+            userId: userId
         }
     });
 
@@ -37,22 +54,31 @@ const updateUserTask = async (idParams, userIdToken, title, description, complet
     }
 
     await task.update({
-        title: title || task.title,
-        description: description !== undefined ? description : task.description,
-        completed: completed !== undefined ? completed : task.completed
-    })
+        title: title !== undefined ? title : task.title,
+        description: description !== undefined
+            ? description
+            : task.description,
+        completed: completed !== undefined
+            ? completed
+            : task.completed
+    });
 
     return task
 }
 
-const deleteUserTask = async (id) => {
+const deleteUserTask = async (idTask, userId) => {
+
+    if (!userId) throw new Error("Error create task")
 
     const task = await Task.findOne({
-        where: { id }
-    })
+        where: {
+            id: idTask,
+            userId: userId
+        }
+    });
 
     if (!task) {
-        return console.error("Task not found");
+        throw new Error("Task not found"); D
     }
 
     await task.destroy()
