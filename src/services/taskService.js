@@ -1,5 +1,6 @@
 import Task from "../models/Task.js";
 import validateText from "../utils/validateText.js";
+import validateTaskData from "../validators/taskValidator.js";
 
 const getUserTasks = async (userId) => {
 
@@ -7,41 +8,31 @@ const getUserTasks = async (userId) => {
 
     const tasks = await Task.findAll({
         where: { userId: userId },
-        as: "ASC"
+        order: [["createdAt", "ASC"]]
     })
 
     return tasks
 }
 
-const createUserTask = async (title, description, userId) => {
+const createUserTask = async ({ title, description, userId }) => {
 
     if (!userId) throw new Error("Error create task")
 
-    title = validateText(title)
-    description = validateText(description)
+    const validatedData = validateTaskData({ title, description })
 
-    if (!title || !description) throw new Error("Error create task")
+    validatedData.userId = userId;
 
-    const task = await Task.create({
-        title,
-        description,
-        userId
-    })
+    const task = await Task.create(validatedData);
 
     return task
 }
 
-const updateUserTask = async (idTask, userId, title, description, completed) => {
+const updateUserTask = async ({ idTask, userId, title, description, completed }) => {
 
     if (!userId) throw new Error("Error create task")
 
-    if (title !== undefined) {
-        title = validateText(title);
-    }
+    const validatedData = validateTaskData({ title, description, completed })
 
-    if (description !== undefined) {
-        description = validateText(description);
-    }
     const task = await Task.findOne({
         where: {
             id: idTask,
@@ -53,22 +44,14 @@ const updateUserTask = async (idTask, userId, title, description, completed) => 
         throw new Error("Task not found");
     }
 
-    await task.update({
-        title: title !== undefined ? title : task.title,
-        description: description !== undefined
-            ? description
-            : task.description,
-        completed: completed !== undefined
-            ? completed
-            : task.completed
-    });
+    await task.update(validatedData);
 
     return task
 }
 
-const deleteUserTask = async (idTask, userId) => {
+const deleteUserTask = async ({ idTask, userId }) => {
 
-    if (!userId) throw new Error("Error create task")
+    if (!userId || !idTask) throw new Error("Error create task")
 
     const task = await Task.findOne({
         where: {
@@ -78,7 +61,7 @@ const deleteUserTask = async (idTask, userId) => {
     });
 
     if (!task) {
-        throw new Error("Task not found"); D
+        throw new Error("Task not found");
     }
 
     await task.destroy()

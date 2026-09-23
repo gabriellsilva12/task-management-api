@@ -3,10 +3,12 @@ import { getUserTasks, createUserTask, updateUserTask, deleteUserTask } from "..
 const getTasks = async (req, res) => {
 
     try {
-        const userId  = req.userId;
+        const userId = req.userId;
+
         const tasks = await getUserTasks(userId)
 
         res.json(tasks)
+
     } catch (error) {
         return res.status(500).json({ error: "Error retrieving task" })
     }
@@ -16,12 +18,14 @@ const getTasks = async (req, res) => {
 const createTask = async (req, res) => {
 
     try {
-        const userId  = req.userId;
+        const userId = req.userId;
+
         const { title, description } = req.body;
 
-        const task = await createUserTask(title, description, userId)
+        const task = await createUserTask({ title, description, userId })
 
         res.status(201).json({ message: "Task successfully created", task });
+
     } catch (error) {
         console.log(error)
         return res.status(500).json({ error: "Error creating task" })
@@ -34,12 +38,13 @@ const updateTask = async (req, res) => {
     try {
         const userId = req.userId
 
-        const { id: idParams } = req.params;
+        const { id: idTask } = req.params;
         const { title, description, completed } = req.body;
-        
-        const task = await updateUserTask(idParams, userId, title, description, completed)
+
+        const task = await updateUserTask({ idTask, userId, title, description, completed })
 
         res.json({ message: "Task successfully updated", task })
+
     } catch (error) {
         res.status(500).json({ error: "Erro updating task" })
     }
@@ -50,11 +55,13 @@ const deleteTask = async (req, res) => {
 
     try {
         const userId = req.userId;
-        const { id: idTask } = req.params
 
-        const task = await deleteUserTask(idTask, userId);
+        const { id: idTask } = req.params;
+
+        const task = await deleteUserTask({ idTask, userId });
 
         res.json({ message: "Task successfully deleted", task })
+
     } catch (error) {
         res.status(500).json({ error: "Erro deleting task" })
     }
