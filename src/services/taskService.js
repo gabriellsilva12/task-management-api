@@ -1,5 +1,4 @@
 import Task from "../models/Task.js";
-import validateText from "../utils/validateText.js";
 import validateTaskData from "../validators/taskValidator.js";
 
 const getUserTasks = async (userId) => {

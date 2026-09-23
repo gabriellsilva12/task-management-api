@@ -8,9 +8,9 @@ import { config } from "dotenv";
 import { testConnection, syncDatabase } from "./config/database.js"
 import authRoutes from "./routes/authRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
+import errorMiddleware from './middlewares/errorMiddleware.js';
 import "./models/index.js"
 import { User } from './models/index.js';
-import errorMiddleware from './middlewares/errorMiddleware.js';
 
 config()
 
@@ -54,7 +54,7 @@ const startServer = async () => {
   // Delete multiple users
   await User.destroy({
         where: {
-              id: [34]
+              id: [37,38]
           }
       });
 //==========================================================================

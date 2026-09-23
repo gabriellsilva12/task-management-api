@@ -1,45 +1,31 @@
 import User from "../models/User.js"
-import validateEmail from "../utils/validateEmail.js"
 import bcrypt from "bcryptjs";
-import validateName from "../utils/validateName.js";
-import validatePassword from "../utils/validatePassword.js";
+import { validateRegisterData, validateLoginData } from "../validators/userValidator.js";
 
 const registerService = async (name, email, password) => {
 
-    email = await validateEmail(email);
+    const validatedData = await validateRegisterData({ name, email, password })
 
-    const existingEmail = await User.findOne({ where: { email } })
+    const hashedPassword = await bcrypt.hash(validatedData.password, 10);
 
-    if (existingEmail) {
-        throw new Error("Invalid email or password")
-    };
+    validateData.password = hashedPassword
 
-    name = validateName(name);
-    password = validatePassword(password);
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({
-        name,
-        email,
-        password: hashedPassword
-    });
+    const user = await User.create(validatedData);
 
     return user;
 }
 
 const loginService = async (email, password) => {
 
-    email = await validateEmail(email);
-    password = validatePassword(password);
+    const validatedData = await validateLoginData({ email, password })
 
-    const user = await User.findOne({ where: { email } })
+    const user = await User.findOne({ where: { email: validatedData.email } })
     if (!user) {
         throw new Error("Invalid email or password")
     }
 
-    const validPassword = await bcrypt.compare(password, user.password)
-    if (!validPassword) {
+    const validPassword = await bcrypt.compare( validatedData.password, user.password );
+    if (!validPassword) { 
         throw new Error("Invalid email or password")
     }
 
