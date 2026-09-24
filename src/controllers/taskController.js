@@ -1,40 +1,33 @@
 import { getUserTasks, createUserTask, updateUserTask, deleteUserTask } from "../services/taskService.js"
 
-const getTasks = async (req, res) => {
-
+const getTasks = async (req, res, next) => {
     try {
-        const userId = req.userId;
+        const tasks = await getUserTasks(req.userId)
 
-        const tasks = await getUserTasks(userId)
-
-        res.json(tasks)
+        res.status(200).json(tasks)
 
     } catch (error) {
-        return res.status(500).json({ error: "Error retrieving task" })
+        next(error)
     }
-
 }
 
-const createTask = async (req, res) => {
-
+const createTask = async (req, res, next) => {
     try {
-        const userId = req.userId;
-
         const { title, description } = req.body;
 
-        const task = await createUserTask({ title, description, userId })
+        const task = await createUserTask({ 
+            title, 
+            description, 
+            userId: req.userId,
+        })
 
         res.status(201).json({ message: "Task successfully created", task });
-
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ error: "Error creating task" })
+        next(error)
     }
-
 }
 
-const updateTask = async (req, res) => {
-
+const updateTask = async (req, res, next) => {]
     try {
         const userId = req.userId
 
@@ -43,29 +36,24 @@ const updateTask = async (req, res) => {
 
         const task = await updateUserTask({ idTask, userId, title, description, completed })
 
-        res.json({ message: "Task successfully updated", task })
-
+        res.status(200).json({ message: "Task successfully updated", task })
     } catch (error) {
-        res.status(500).json({ error: "Erro updating task" })
+        next(error)
     }
-
 }
 
-const deleteTask = async (req, res) => {
-
+const deleteTask = async (req, res, next) => {
     try {
         const userId = req.userId;
 
         const { id: idTask } = req.params;
 
-        const task = await deleteUserTask({ idTask, userId });
+        await deleteUserTask({ idTask, userId });
 
-        res.json({ message: "Task successfully deleted", task })
-
+        res.status(200).json({ message: "Task successfully deleted" })
     } catch (error) {
-        res.status(500).json({ error: "Erro deleting task" })
+        next(error)
     }
-
 }
 
 export {

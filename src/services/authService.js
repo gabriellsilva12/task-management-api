@@ -28,7 +28,7 @@ const registerService = async (name, email, password) => {
 };
 
 const loginService = async (email, password) => {
-
+    
     const data = await validateLoginData({ email, password });
 
     const user = await User.findOne({ where: { email: data.email } });
