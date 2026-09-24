@@ -1,55 +1,33 @@
-import jwt from "jsonwebtoken"
-import { config } from "dotenv"
-import { registerService, loginService } from "../services/authService.js"
+import { registerService, loginService } from "../services/authService.js";
 
-config()
-
-const register = async (req, res) => {
+const register = async (req, res, next) => {
 
     try {
-        const { name, email, password } = req.body
+        const { name, email, password } = req.body;
 
-        const user = await registerService( name, email, password )
+        const user = await registerService(name, email, password);
 
-        res.status(201).json({
-            id: user.id,
-            name: user.name,
-            email: user.email
-        })
+        res.status(201).json(user);
     } catch (error) {
-        // console.log(error)
-        res.status(400).json({ error: "Error registering user" })
+
+        next(error);
     }
 
-}
+};
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
 
     try {
         const { email, password } = req.body;
 
-        const user = await loginService( email, password )
+        const result = await loginService(email, password);
 
-        const token = jwt.sign(
-            { id: user.id, email: user.email },
-            process.env.JWT_SECRET,
-            { expiresIn: "7d" }
-        )
-
-        res.json({
-            token,
-            user: {
-                id: user.id,
-                name: user.name,
-                email: user.email
-            }
-        })
-
+        res.json(result);
     } catch (error) {
-        // console.log(error)
-        res.status(400).json({ error: "Login error" })
+
+        next(error);
     }
 
-}
+};
 
-export { register, login }
+export { register, login };

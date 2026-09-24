@@ -1,36 +1,50 @@
-import User from "../models/User.js"
+import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { validateRegisterData, validateLoginData } from "../validators/userValidator.js";
+import { config } from "dotenv"
+
+import User from "../models/User.js";
+import AppError from "../errors/AppError.js";
+import {
+    validateRegisterData,
+    validateLoginData,
+} from "../validators/userValidator.js";
+
+config()
 
 const registerService = async (name, email, password) => {
 
-    const validatedData = await validateRegisterData({ name, email, password })
+    const data = await validateRegisterData({ name, email, password });
 
-    const hashedPassword = await bcrypt.hash(validatedData.password, 10);
+    const existingUser = await User.findOne({ where: { email: data.email } });
+    if (existingUser) {
+        throw new AppError("Email already registered", 409);
+    }
 
-    validateData.password = hashedPassword
+    const hashedPassword = await bcrypt.hash(data.password, 10);
 
-    const user = await User.create(validatedData);
+    const user = await User.create({ ...data, password: hashedPassword });
 
-    return user;
-}
+    return { id: user.id, name: user.name, email: user.email };
+};
 
 const loginService = async (email, password) => {
 
-    const validatedData = await validateLoginData({ email, password })
+    const data = await validateLoginData({ email, password });
 
-    const user = await User.findOne({ where: { email: validatedData.email } })
-    if (!user) {
-        throw new Error("Invalid email or password")
+    const user = await User.findOne({ where: { email: data.email } });
+
+    const validPassword = user ? await bcrypt.compare(data.password, user.password) : false;
+    if (!validPassword) {
+        throw new AppError("Invalid email or password", 401);
     }
 
-    const validPassword = await bcrypt.compare( validatedData.password, user.password );
-    if (!validPassword) { 
-        throw new Error("Invalid email or password")
-    }
+    const token = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+    );
 
-    return user
-}
+    return { token, user: { id: user.id, name: user.name, email: user.email } };
+};
 
-
-export { registerService, loginService }
+export { registerService, loginService };
