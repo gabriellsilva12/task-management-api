@@ -1,15 +1,19 @@
-const validateName = (name) => {
-    const clearName = name.trim()
-    
-    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/.test(clearName)) name = false;
-    
-    if (clearName.length === 0 || clearName.length > 30) name = false;
-    
-    if (!name) {
-        throw new Error("Invalid name");
-    };
+import AppError from "../errors/AppError.js";
 
-    return name;
+const rules = [
+    (v) => v.length > 0,
+    (v) => v.length <= 30,
+    (v) => /^[\p{L}\s'-]+$/u.test(v),
+];
+
+const validateName = (name) => {
+    const value = typeof name === "string" ? name.trim() : "";
+
+    if (!rules.every((rule) => rule(value))) {
+        throw new AppError("Invalid name", 400);
+    }
+
+    return value;
 };
 
-export default validateName
+export default validateName;

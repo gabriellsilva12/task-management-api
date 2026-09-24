@@ -1,30 +1,32 @@
-import dns from 'node:dns/promises'
-import emailValidator from "node-email-verifier"
+import dns from "node:dns/promises";
+import emailValidator from "node-email-verifier";
+import AppError from "../errors/AppError.js";
 
-const validateEmail = async ( email ) => {
+const validateEmail = async (email) => {
+    const value = typeof email === "string" ? email.trim().toLowerCase() : "";
 
-    email = email.trim().toLowerCase()
-
-    const result = await emailValidator( email, {
+    const result = await emailValidator(value, {
         checkMx: false,
         checkDisposable: true,
         detailed: true,
-    })
-    
-    if(!result.valid) {
-        console.log("Invalid E-mail:", result)
-        return false
+    });
+
+    if (!result.valid) {
+        throw new AppError("Invalid email", 400);
     }
 
-    const domain = email.split("@")[1]
-
+    let records = [];
     try {
-        const records = await dns.resolveMx(domain)
-        return records.length > 0 ? email : false;
-    } catch (err) {
-        // console.log("MX lookup failed:", err.message)
-        return false
+        records = await dns.resolveMx(value.split("@")[1]);
+    } catch {
+        console.log("MX lookup failed:", err.message)
     }
-}   
 
-export default validateEmail
+    if (records.length === 0) {
+        throw new AppError("Invalid email", 400);
+    }
+
+    return value;
+};
+
+export default validateEmail;

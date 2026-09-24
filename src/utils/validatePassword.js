@@ -1,24 +1,24 @@
+import AppError from "../errors/AppError.js";
+
+const rules = [
+    (v) => v.length >= 8 && v.length <= 64, 
+    (v) => !/\s/.test(v),                   
+    (v) => /[A-Z]/.test(v),                 
+    (v) => /[a-z]/.test(v),                 
+    (v) => /[0-9]/.test(v),                 
+    (v) => /[^A-Za-z0-9]/.test(v),          
+]
+
 const validatePassword = (password) => {
+    const value = typeof password === "string" ? password : "";
 
-    let passwordValue = password.trim();
+    const isValid = rules.every((rule) => rule(value));
 
-    if (passwordValue.length < 8 || passwordValue.length > 64) passwordValue = false;
-
-    if (/\s/.test(password)) passwordValue = false;
-
-    if (!/[A-Z]/.test(passwordValue)) passwordValue = false;
-
-    if (!/[a-z]/.test(passwordValue)) passwordValue = false;
-
-    if (!/[0-9]/.test(passwordValue)) passwordValue = false;
-
-    if (!/[^A-Za-z0-9]/.test(password)) passwordValue = false;
-
-    if (!passwordValue) {
-        throw new Error("Invalid password");
+    if (!isValid) {
+        throw new AppError("Invalid password", 400);
     }
 
-    return password;
+    return value;
 };
 
-export default validatePassword
+export default validatePassword;

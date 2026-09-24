@@ -1,15 +1,19 @@
+import AppError from "../errors/AppError.js";
+
+const rules = [
+    (v) => v.length > 0,
+    (v) => v.length <= 500,
+    (v) => !/<[^>]*>/.test(v),
+];
+
 const validateText = (text) => {
-    const clearText = text.trim();
+    const value = typeof text === "string" ? text.trim() : "";
 
-    if (!clearText || clearText.length > 500) {
-        throw new Error("Invalid text");
+    if (!rules.every((rule) => rule(value))) {
+        throw new AppError("Invalid text", 400);
     }
 
-    if (/<[^>]*>/.test(clearText)) {
-        throw new Error("Invalid text");
-    }
-
-    return text;
+    return value;
 };
 
 export default validateText;
