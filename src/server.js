@@ -4,15 +4,11 @@ dns.setServers(['8.8.8.8', '1.1.1.1']);
 import express from "express";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
-import { config } from "dotenv";
 import { testConnection, syncDatabase } from "./config/database.js"
 import authRoutes from "./routes/authRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import errorMiddleware from './middlewares/errorMiddleware.js';
-import "./models/index.js"
-import { User } from './models/index.js';
-
-config()
+import "dotenv/config";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -48,15 +44,12 @@ const startServer = async () => {
 //==========================================================================
   // DEVELOPMENT / DATABASE TESTS 
 
-  // Reset database (WARNING: deletes all data)
-  // await syncDatabase(true);
-
   // Delete multiple users
-  await User.destroy({
-        where: {
-              id: [37,38]
-          }
-      });
+  // await User.destroy({
+  //       where: {
+  //             id: [42]
+  //         }
+  //     });
 //==========================================================================
     
     app.listen(PORT, () => {

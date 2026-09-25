@@ -9,7 +9,12 @@ const loginLimiter = rateLimit({
     limit: 5
 })
 
+const registerLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000,   // 1 hora
+    limit: 10,                  // 10 cadastros por IP por hora
+});
+
 router.post("/login", loginLimiter, login)
-router.post("/register", register)
+router.post("/register", registerLimiter, register)
 
 export default router;

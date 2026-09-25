@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { config } from "dotenv"
+import "dotenv/config";
 
 import User from "../models/User.js";
 import AppError from "../errors/AppError.js";
@@ -9,7 +9,6 @@ import {
     validateLoginData,
 } from "../validators/userValidator.js";
 
-config()
 
 const registerService = async (name, email, password) => {
 
@@ -29,7 +28,7 @@ const registerService = async (name, email, password) => {
 
 const loginService = async (email, password) => {
     
-    const data = await validateLoginData({ email, password });
+    const data = validateLoginData({ email, password });
 
     const user = await User.findOne({ where: { email: data.email } });
 

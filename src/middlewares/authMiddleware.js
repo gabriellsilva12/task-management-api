@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken"
-import { config } from "dotenv"
-config()
+import "dotenv/config";
 
 const authMiddleware = (req, res, next) => {
 

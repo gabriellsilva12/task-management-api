@@ -27,7 +27,7 @@ const createTask = async (req, res, next) => {
     }
 }
 
-const updateTask = async (req, res, next) => {]
+const updateTask = async (req, res, next) => {
     try {
         const userId = req.userId
 
