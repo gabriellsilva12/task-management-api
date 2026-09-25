@@ -47,7 +47,13 @@ const startServer = async () => {
   // Delete multiple users
   // await User.destroy({
   //       where: {
-  //             id: [42]
+  //             id: [43,44,45,46,47,48,49,50,51,52,53]
+  //         }
+  //     });
+
+  // await Task.destroy({
+  //       where: {
+  //             id: [20,21,22]
   //         }
   //     });
 //==========================================================================
@@ -62,3 +68,33 @@ const startServer = async () => {
 }
 
 startServer()
+
+
+
+// {
+// 	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTQsImVtYWlsIjoicm96ZW5vQGdtYWlsLmNvbSIsImlhdCI6MTc5MDM2MDYxNiwiZXhwIjoxNzkwOTY1NDE2fQ.8o_Q5Qo5lFLKKl7AZX0vhheKsuLl4jUKZV46W88sHoc",
+// 	"user": {
+// 		"id": 54,
+// 		"name": "Rozeno Silva",
+// 		"email": "rozeno@gmail.com"
+// 	}
+// }
+// {
+// 	"email": "Rozeno@gmail.com",
+// 	"password": "Ga1234567@"
+// }
+///////////////////////////////////////////////////////////////////////
+
+
+// {
+// 	"email": "Ramon@gmail.com",
+// 	"password": "Ga1234567@"
+// }
+// {
+// 	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsImVtYWlsIjoicmFtb25AZ21haWwuY29tIiwiaWF0IjoxNzkwMzYwNjk5LCJleHAiOjE3OTA5NjU0OTl9.Afj73hJV2al7LTI1cnCCzczCmhaj_tIQdZ5_3ympm-4",
+// 	"user": {
+// 		"id": 55,
+// 		"name": "Ramon",
+// 		"email": "ramon@gmail.com"
+// 	}
+// }

@@ -1,5 +1,5 @@
 import AppError from "../errors/AppError.js";
-import Task from "../models/Task.js";
+import { Task } from "../models/index.js";
 import validateTaskData from "../validators/taskValidator.js";
 
 const getUserTasks = async (userId) => {
@@ -22,7 +22,7 @@ const createUserTask = async ({ title, description, userId }) => {
         throw new AppError("Title is required", 400);
     }
 
-    return Task.create({ ...validatedData, userId });
+    return Task.create({ ...validatedData, userId } );
 }
 
 const updateUserTask = async ({ idTask, userId, title, description, completed }) => {
@@ -35,7 +35,7 @@ const updateUserTask = async ({ idTask, userId, title, description, completed })
 
     if (!task) throw new AppError("Task not found", 404);
 
-    return task.update(validatedData);
+    return Task.update(validatedData);
 }
 
 const deleteUserTask = async ({ idTask, userId }) => {
@@ -48,7 +48,7 @@ const deleteUserTask = async ({ idTask, userId }) => {
         throw new AppError("Task not found", 404)
     }
 
-    return task.destroy()
+    return Task.destroy()
 }
 
 export { getUserTasks, createUserTask, updateUserTask, deleteUserTask }

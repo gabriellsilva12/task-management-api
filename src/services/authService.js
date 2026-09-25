@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
 
-import User from "../models/User.js";
+import { User } from "../models/index.js";
 import AppError from "../errors/AppError.js";
 import {
     validateRegisterData,
