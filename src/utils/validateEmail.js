@@ -18,7 +18,7 @@ const validateEmail = async (email) => {
     let records = [];
     try {
         records = await dns.resolveMx(value.split("@")[1]);
-    } catch {
+    } catch(err) {
         console.log("MX lookup failed:", err.message)
     }
 
