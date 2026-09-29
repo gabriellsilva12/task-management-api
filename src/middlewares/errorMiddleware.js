@@ -5,7 +5,7 @@ const errorMiddleware = (err, req, res, next) => {
     const isExpected = err instanceof AppError && err.isOperational;
 
     if (isExpected) {
-        console.log({
+        console.warn({
             error: err.message,
             status: err.statusCode,
             method: req.method,
