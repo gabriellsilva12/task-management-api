@@ -22,7 +22,7 @@ const testConnection = async () => {
         await sequelize.authenticate();
         console.log("Database connection successful")
     } catch (error) {
-        console.erro("Database connection error", error)
+        console.error("Database connection error", error)
         process.exit(1)
     }
 
@@ -34,7 +34,8 @@ const syncDatabase = async (force = false) => {
         await sequelize.sync({ force })
         console.log("Success synchronizing database")
     } catch (error) {
-        console.error("Error synchronizing database", error)
+        console.error("Error synchronizing database", error);
+        throw error;
     }
 
 }
