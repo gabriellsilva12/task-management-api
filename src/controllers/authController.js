@@ -18,7 +18,7 @@ const login = async (req, res, next) => {
 
         const result = await loginService(email, password);
 
-        res.json(result);
+        res.status(200).json(result);
     } catch (error) {
         next(error);
     }

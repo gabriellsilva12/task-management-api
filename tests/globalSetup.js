@@ -2,8 +2,7 @@ import { config } from "dotenv";
 
 config({ path: ".env.test" });
 
-await import("../src/models/User.js");
-await import("../src/models/Task.js");
+await import("../src/models/index.js")
 
 const { syncDatabase } = await import(
     "../src/config/database.js"
