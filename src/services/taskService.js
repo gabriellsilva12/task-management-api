@@ -22,7 +22,7 @@ const createUserTask = async ({ title, description, userId }) => {
         throw new AppError("Title is required", 400);
     }
 
-    return Task.create({ ...validatedData, userId } );
+    return Task.create({ ...validatedData, userId });
 }
 
 const updateUserTask = async ({ idTask, userId, title, description, completed }) => {
@@ -35,7 +35,11 @@ const updateUserTask = async ({ idTask, userId, title, description, completed })
 
     if (!task) throw new AppError("Task not found", 404);
 
-    return Task.update(validatedData);
+    return Task.update(validatedData, {
+        where: {
+            id: idTask,
+        },
+    });
 }
 
 const deleteUserTask = async ({ idTask, userId }) => {
