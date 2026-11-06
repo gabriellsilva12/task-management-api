@@ -52,7 +52,11 @@ const deleteUserTask = async ({ idTask, userId }) => {
         throw new AppError("Task not found", 404)
     }
 
-    return Task.destroy()
+    return Task.destroy({
+        where: {
+            id: idTask,
+        },
+    })
 }
 
 export { getUserTasks, createUserTask, updateUserTask, deleteUserTask }
